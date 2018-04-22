@@ -5,8 +5,8 @@ const vkAPi = require('./vkApi');
 firebase.initializeApp(fbConfig);
 const database = firebase.database();
 
-async function getFirst100Records(){
-  let records = await vkAPi.getWallRecords();
+async function getRecordsChunk({count, offset}){
+  let records = await vkAPi.getWallRecords({count, offset});
   let updates = {};
   records.items.forEach(r => {
     let dbRecord = {
@@ -19,10 +19,22 @@ async function getFirst100Records(){
     if(r.signer_id) dbRecord.signerId = r.signer_id;
     updates['/wallRecords/' + r.id] = dbRecord;
   });
-  database.ref().update(updates).then(_ => process.exit());
+  return database.ref().update(updates);
 }
 
-getFirst100Records();
+async function getRecords(number){
+  let recordsReceived = 0;
+  let offset = 0;
+  while (recordsReceived < number){
+    await getRecordsChunk({count: 100, offset: offset});
+    offset += 100;
+    recordsReceived += 100;
+    console.log(`Got records: ${recordsReceived}, offset: ${offset}`)
+  }
+  process.exit();
+}
+
+getRecords(10000);
 
 
 // // write
