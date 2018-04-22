@@ -58,3 +58,4 @@ typings/
 .env
 
 firebase-config.js
+vk-config.js
