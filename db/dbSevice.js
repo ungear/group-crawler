@@ -37,10 +37,20 @@ exports.upsertWallRecords = function(wrs){
     .catch(e => mongoose.disconnect())
 }
 
-exports.getTopWallRecordsBylikes = function(count = 10){
+exports.getTopWallRecordsByLikes = function(count = 10){
   mongoose.connect(dbUrl);
   return WallRecord.find({})
     .sort({likes: -1})
+    .limit(count)
+    .exec()
+    .then(results => { mongoose.disconnect(); return results;})
+    .catch(e => mongoose.disconnect())
+}
+
+exports.getTopWallRecordsByReposts = function(count = 10){
+  mongoose.connect(dbUrl);
+  return WallRecord.find({})
+    .sort({reposts: -1})
     .limit(count)
     .exec()
     .then(results => { mongoose.disconnect(); return results;})
