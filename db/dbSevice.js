@@ -36,3 +36,13 @@ exports.upsertWallRecords = function(wrs){
     .then(_ => mongoose.disconnect())
     .catch(e => mongoose.disconnect())
 }
+
+exports.getTopWallRecordsBylikes = function(count = 10){
+  mongoose.connect(dbUrl);
+  return WallRecord.find({})
+    .sort({likes: -1})
+    .limit(count)
+    .exec()
+    .then(results => { mongoose.disconnect(); return results;})
+    .catch(e => mongoose.disconnect())
+}

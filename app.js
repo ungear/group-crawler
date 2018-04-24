@@ -18,4 +18,10 @@ async function getRecords(number){
   process.exit();
 }
 
-getRecords(1000);
+async function getWallRecordsTop(count = 10){
+  let top = await dbService.getTopWallRecordsBylikes();
+  console.log(top.map(r => ({id: r._id, likes: r.likes})));
+  process.exit();
+}
+//getRecords(1000);
+getWallRecordsTop();
