@@ -44,6 +44,15 @@ exports.upsertWallRecords = function(wrs){
     .catch(e => mongoose.disconnect())
 }
 
+exports.pizza = function(){
+  mongoose.connect(dbUrl);
+  return WallRecord.aggregate([
+    {$match:{signer_id:{"$ne": null}}},
+    {$group: {_id: "$signer_id", total: {$sum: "$likes"}}}
+  ])
+  .sort({total: -1})
+}
+
 exports.upsertProfiles = function(profiles){
   mongoose.connect(dbUrl);
   let upsertPromises =  profiles.map(pr => {

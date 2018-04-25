@@ -28,6 +28,13 @@ async function getWallRecordsTopByReposts(count = 10){
   let top = await dbService.getTopWallRecordsByReposts();
   console.log(top.map(r => ({id: r._id, reposts: r.reposts})));
 }
-getRecords(100);
+
+async function calculateSignerLikes(){
+  let r =await dbService.pizza(); 
+  console.log(r)
+  return r
+}
+calculateSignerLikes();
+//getRecords(100);
 //getWallRecordsTop();
 //getWallRecordsTopByReposts();
