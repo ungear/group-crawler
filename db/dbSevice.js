@@ -17,6 +17,13 @@ const WallRecordScheme = new Schema({
 })
 const WallRecord = mongoose.model("wallRecords", WallRecordScheme);
 
+const ProfileScheme = new Schema({
+  first_name: String,
+  last_name: String,
+  _id: Number
+})
+const Profile = mongoose.model("profiles", ProfileScheme);
+
 exports.upsertWallRecords = function(wrs){
   mongoose.connect(dbUrl);
   let upsertPromises =  wrs.map(wr => {
@@ -30,6 +37,22 @@ exports.upsertWallRecords = function(wrs){
       _id: wr.id,
     }
     return WallRecord.update({_id: dbWrRecord._id}, dbWrRecord, {upsert: true})
+  })
+
+  return Promise.all(upsertPromises)
+    .then(_ => mongoose.disconnect())
+    .catch(e => mongoose.disconnect())
+}
+
+exports.upsertProfiles = function(profiles){
+  mongoose.connect(dbUrl);
+  let upsertPromises =  profiles.map(pr => {
+    let dbProfile = {
+      first_name: pr.first_name,
+      last_name: pr.last_name,
+      _id: pr.id
+    }
+    return Profile.update({_id: dbProfile._id}, dbProfile, {upsert: true})
   })
 
   return Promise.all(upsertPromises)

@@ -3,7 +3,8 @@ const dbService = require('./db/dbSevice');
 
 async function getRecordsChunk({count, offset}){
   let records = await vkAPi.getWallRecords({count, offset});
-  return dbService.upsertWallRecords(records.items)
+  await dbService.upsertWallRecords(records.items);
+  return dbService.upsertProfiles(records.profiles)
 }
 
 async function getRecords(number){
@@ -27,6 +28,6 @@ async function getWallRecordsTopByReposts(count = 10){
   let top = await dbService.getTopWallRecordsByReposts();
   console.log(top.map(r => ({id: r._id, reposts: r.reposts})));
 }
-//getRecords(1000);
-getWallRecordsTop();
-getWallRecordsTopByReposts();
+getRecords(100);
+//getWallRecordsTop();
+//getWallRecordsTopByReposts();
