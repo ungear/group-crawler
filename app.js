@@ -30,7 +30,7 @@ async function getWallRecordsTopByReposts(count = 10){
 }
 
 async function calculateSignerLikes(){
-  let r =await dbService.pizza(); 
+  let r =await dbService.getSignerLikesTotal(5); 
   console.log(r)
   return r
 }

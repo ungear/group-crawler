@@ -44,13 +44,14 @@ exports.upsertWallRecords = function(wrs){
     .catch(e => mongoose.disconnect())
 }
 
-exports.pizza = function(){
+exports.getSignerLikesTotal = function(limit = 100){
   mongoose.connect(dbUrl);
   return WallRecord.aggregate([
     {$match:{signer_id:{"$ne": null}}},
     {$group: {_id: "$signer_id", total: {$sum: "$likes"}}}
   ])
   .sort({total: -1})
+  .limit(limit)
 }
 
 exports.upsertProfiles = function(profiles){
